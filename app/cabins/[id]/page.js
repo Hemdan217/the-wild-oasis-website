@@ -1,5 +1,11 @@
+import DateSelector from "@/app/_components/DateSelector";
+import ReservationForm from "@/app/_components/ReservationForm";
 import TextExpander from "@/app/_components/TextExpander";
-import { getCabin } from "@/app/_lib/data-service";
+import {
+  getBookedDatesByCabinId,
+  getCabin,
+  getSettings,
+} from "@/app/_lib/data-service";
 import { EyeSlashIcon, MapPinIcon, UsersIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 
@@ -13,6 +19,9 @@ export async function generateMetadata({ params }) {
 
 export default async function Page({ params }) {
   const cabin = await getCabin(params.id);
+  const cabinBookedDates = await getBookedDatesByCabinId(params.id);
+  const settings = await getSettings(params.id);
+  console.log(settings);
   const { id, name, maxCapacity, regularPrice, discount, image, description } =
     cabin;
 
@@ -63,9 +72,13 @@ export default async function Page({ params }) {
       </div>
 
       <div>
-        <h2 className="text-5xl font-semibold text-center">
-          Reserve today. Pay on arrival.
+        <h2 className="text-5xl text-accent-500 font-semibold text-center">
+          Reserve {name} today. Pay on arrival.
         </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 items-center ">
+          <DateSelector />
+          <ReservationForm maxCapacity={maxCapacity} />
+        </div>
       </div>
     </div>
   );
