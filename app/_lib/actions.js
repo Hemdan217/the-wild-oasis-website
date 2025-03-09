@@ -1,7 +1,7 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
-import { updateGuest } from "./data-service";
+import { deleteBooking, updateGuest } from "./data-service";
 export const updateGuestAction = async (formData) => {
   const session = await auth();
   console.log(formData, "this is the form data");
@@ -20,6 +20,15 @@ export const updateGuestAction = async (formData) => {
   } catch (error) {
     console.error(error);
     throw new Error("Guest could not be updated");
+  }
+};
+
+export const deleteReservation = async (bookingId) => {
+  try {
+    await deleteBooking(bookingId);
+    revalidatePath("/account/reservations");
+  } catch (error) {
+    throw new Error(error);
   }
 };
 export const signInAction = async () => {

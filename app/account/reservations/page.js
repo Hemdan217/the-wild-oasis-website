@@ -1,9 +1,12 @@
-
 import ReservationCard from "@/app/_components/ReservationCard";
+import { auth } from "@/app/_lib/auth";
+import { getBookings } from "@/app/_lib/data-service";
+import Link from "next/link";
 
-export default function Page() {
+export default async function Page() {
   // CHANGE
-  const bookings = [];
+  const { user } = await auth();
+  const bookings = await getBookings(user.guestId);
 
   return (
     <div>
@@ -14,9 +17,9 @@ export default function Page() {
       {bookings.length === 0 ? (
         <p className="text-lg">
           You have no reservations yet. Check out our{" "}
-          <a className="underline text-accent-500" href="/cabins">
+          <Link className="underline text-accent-500" href="/cabins">
             luxury cabins &rarr;
-          </a>
+          </Link>
         </p>
       ) : (
         <ul className="space-y-6">
