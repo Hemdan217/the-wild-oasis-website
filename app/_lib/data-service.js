@@ -64,11 +64,14 @@ export async function getGuest(email) {
 }
 
 export async function getBooking(id) {
+  const { user } = await auth();
   const { data, error, count } = await supabase
     .from("bookings")
-    .select("*")
+    .select("*, cabins(maxCapacity)")
     .eq("id", id)
+    .eq("guestId", user.guestId)
     .single();
+  if (count === 0) notFound();
 
   if (error) {
     console.error(error);
@@ -199,10 +202,12 @@ export async function updateGuest(id, updatedFields) {
 }
 
 export async function updateBooking(id, updatedFields) {
+  const { user } = await auth();
   const { data, error } = await supabase
     .from("bookings")
     .update(updatedFields)
     .eq("id", id)
+    .eq("guestId", user.guestId)
     .select()
     .single();
 

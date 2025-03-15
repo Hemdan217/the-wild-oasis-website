@@ -1,7 +1,8 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
-import { deleteBooking, updateGuest } from "./data-service";
+import { deleteBooking, updateBooking, updateGuest } from "./data-service";
+import { redirect } from "next/navigation";
 export const updateGuestAction = async (formData) => {
   const session = await auth();
   console.log(formData, "this is the form data");
@@ -27,6 +28,19 @@ export const deleteReservation = async (bookingId) => {
   try {
     await deleteBooking(bookingId);
     revalidatePath("/account/reservations");
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+export const updateBookingAction = async (formData) => {
+  console.log(formData, "this is the form data");
+  try {
+    await updateBooking(+formData.get("bookingId"), {
+      observations: formData.get("observations"),
+      numGuests: +formData.get("numGuests"),
+    });
+    revalidatePath("/account/reservations");
+    redirect("/account/reservations");
   } catch (error) {
     throw new Error(error);
   }
