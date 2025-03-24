@@ -24,7 +24,7 @@ export const updateGuestAction = async (formData) => {
   }
 };
 
-export const deleteReservation = async (bookingId) => {
+export const deleteReservationAction = async (bookingId) => {
   try {
     await deleteBooking(bookingId);
     revalidatePath("/account/reservations");
@@ -40,7 +40,7 @@ export const updateBookingAction = async (formData) => {
       numGuests: +formData.get("numGuests"),
     });
     revalidatePath("/account/reservations");
-    redirect("/account/reservations");
+    return redirect("/account/reservations");
   } catch (error) {
     throw new Error(error);
   }

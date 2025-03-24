@@ -223,6 +223,7 @@ export async function updateBooking(id, updatedFields) {
 
 export async function deleteBooking(id) {
   const { user } = await auth();
+  // throw new Error("Booking could not be deleted");
   const { data, error } = await supabase
     .from("bookings")
     .delete()
